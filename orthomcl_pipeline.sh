@@ -1,7 +1,7 @@
 #OrthoMCL installation
 
 workingdir="~/Documents"
-orthodir=`echo "$workingdir /orthomclSoftware-v2.0.9/bin"`
+orthodir=`echo "$workingdir/orthomclSoftware-v2.0.9/bin"`
 mysqlpass="mysqlrootpassword"
 dependenciesinstall="no"
 installorthomcl="no"
