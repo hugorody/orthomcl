@@ -1,16 +1,16 @@
 #!/usr/bin/sh
-#OrthoMCL installation
 
-#configure variables
-workingdir="/path/to/orthomcltest" #set working directory
+#CONFIGURE VARIABLES
+workingdir="/path/to/orthomcltest" # SET working directory
 orthodir=`echo "$workingdir/orthomclSoftware-v2.0.9/bin"`
-mysqlpass="user123" #root password
-dependenciesinstall="no"
-installorthomcl="no"
-fastainput="/path/to/fasta/dir/"
-clusteracro="CLU" #acronym for the groups
-blastAVAfile="" #blast all-vs-all file - if not provided will run STEP 7
+mysqlpass="user123" # SET root password
+dependenciesinstall="no" # SET yes to install softwares and dependencies
+installorthomcl="no" # SET yes to install MCL software
+fastainput="/path/to/fasta/dir/" # SET your input directory with n FASTA files
+clusteracro="CLU" #SET an acronym for the groups
+blastAVAfile="" #LEAVE empty if you don't have the BLASTp all-vs-all file (will run STEP 7)
 
+#OrthoMCL INSTALL
 #STEP (1)
 #install or get access to a supported relational database.  If using MySql, certain configurations are required, so it may involve working with your MySql administrator or installing your own MySql.  See the mysqlInstallationGuide.txt document provided with the orthomcl software.
 
@@ -52,7 +52,6 @@ if [ "$installorthomcl" = "yes" ]; then
 fi
 
 #ORTHOMCL Pipeline
-
 #create my_orthomcl working directories
 mkdir "$orthodir"/../my_orthomcl_dir
 mkdir "$orthodir"/../my_orthomcl_dir/compliantFasta
@@ -95,7 +94,6 @@ do
 done
 #Copy Sugar.fas from orthomclAdjustFasta directory to /my_orthomcl_dir/compliantFasta/
 
-
 #(6) run orthomclFilterFasta to filter away poor quality proteins, and optionally remove alternative proteins.
 echo "========== Step 6: orthomclFilterFasta =========="
 "$orthodir"/orthomclFilterFasta "$orthodir"/../my_orthomcl_dir/compliantFasta/ 10 20 "$orthodir"/../my_orthomcl_dir/goodProteins.fas "$orthodir"/../my_orthomcl_dir/badProteins.fas
@@ -133,4 +131,4 @@ mcl mclInput --abc -I 1.5 -o "$orthodir"/../my_orthomcl_dir/mclOutput
 
 #(13) run orthomclMclToGroups to convert mcl output to groups.txt
 echo "========= Step 13: orthomclMclToGroups =========="
-"$orthodir"/orthomclMclToGroups "$clusteracro" 1 < "$orthodir"/../my_orthomcl_dir/mclOutput > "$orthodir"/../my_orthomcl_dir/groups.txt
+"$orthodir"/orthomclMclToGroups "$clusteracro" 1 < "$orthodir"/../my_orthomcl_dir/mclOutput > groups.txt
