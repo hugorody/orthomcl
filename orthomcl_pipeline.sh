@@ -89,7 +89,7 @@ for i in "$fastainput"/*
 do
   echo "$i"
   ((COUNTER++))
-  "$orthodir"/orthomclAdjustFasta Group"$COUNTER" "$i" 1
+  "$orthodir"/orthomclAdjustFasta Taxon"$COUNTER" "$i" 1
   cp Group"$COUNTER".fasta "$orthodir"/../my_orthomcl_dir/compliantFasta/
 done
 #Copy Sugar.fas from orthomclAdjustFasta directory to /my_orthomcl_dir/compliantFasta/
