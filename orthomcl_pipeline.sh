@@ -1,3 +1,4 @@
+#!/usr/bin/sh
 #OrthoMCL installation
 
 #configure variables
