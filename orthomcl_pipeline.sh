@@ -11,17 +11,13 @@ intlog="1"
 clusteracro="SUG"
 blastAVAfile="" #blast all-vs-all file - if not provided will run
 
-#/home/hugo/Documents/orthomcltest/orthomclSoftware-v2.0.9/my_orthomcl_dir/all-vs-all.blastp
-
 #STEP (1)
 #install or get access to a supported relational database.  If using MySql, certain configurations are required, so it may involve working with your MySql administrator or installing your own MySql.  See the mysqlInstallationGuide.txt document provided with the orthomcl software.
 
 if [ "$dependenciesinstall" = "yes" ]; then
-    echo "Installing dependencies..."
-  sudo apt-get install libxi-dev libxmu-dev freeglut3-dev libgsl0-dev libnetpbm10-dev libplplot-dev pgplot5 build-essential gfortran
-
-  cpanm BioPerl DBI Parallel::ForkManager YAML::Tiny Set::Scalar Text::Table Exception::Class Test::Most Test::Warn Test::Exception Test::Deep Moose SVG Algorithm::Combinatorics
-
+	echo "Installing dependencies..."
+	sudo apt-get install libxi-dev libxmu-dev freeglut3-dev libgsl0-dev libnetpbm10-dev libplplot-dev pgplot5 build-essential gfortran
+	cpanm BioPerl DBI Parallel::ForkManager YAML::Tiny Set::Scalar Text::Table Exception::Class Test::Most Test::Warn Test::Exception Test::Deep Moose SVG Algorithm::Combinatorics
 	sudo apt-get install mysql-server
 
 	export DBD_MYSQL_LIBS="-L/usr/local/mysql/lib/mysql -lmysqlclient"
