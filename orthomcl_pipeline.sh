@@ -77,6 +77,7 @@ echo "oracleIndexTblSpc=NONE" | tee -a my_orthomcl_dir/orthomcl.config
 #(4) run orthomclInstallSchema to install the required schema into the database
 echo "========== Step 4: orthomclInstallSchema ========"
 orthomclSoftware-v2.0.9/bin/orthomclInstallSchema my_orthomcl_dir/orthomcl.config my_orthomcl_dir/install_schema.log
+echo "Done!"
 
 #(5) run orthomclAdjustFasta (or your own simple script) to generate protein fasta files in the required format
 echo "=========== Step 5: orthomclAdjustFasta ========="
@@ -111,15 +112,17 @@ orthomclSoftware-v2.0.9/bin/orthomclBlastParser my_orthomcl_dir/all-vs-all.blast
 #(9) run orthomclLoadBlast to load the output of orthomclBlastParser into the database
 echo "=========== Step 9: orthomclLoadBlast  =========="
 orthomclSoftware-v2.0.9/bin/orthomclLoadBlast my_orthomcl_dir/orthomcl.config my_orthomcl_dir/similarSequences.txt
+echo "Done!"
 
 #(10) run the orthomclPairs program to compute pairwise relationships
 echo "============ Step 10: orthomclPairs ============="
 orthomclSoftware-v2.0.9/bin/orthomclPairs my_orthomcl_dir/orthomcl.config my_orthomcl_dir/similarSequences.txt cleanup=no
+echo "Done!"
 
 #(11) run the orthomclDumpPairsFiles program to dump the pairs/ directory from the database
 echo "======== Step 11: orthomclDumpPairsFiles ========"
-#cp -r pairs/ orthomclSoftware-v2.0.9/bin/
 orthomclSoftware-v2.0.9/bin/orthomclDumpPairsFiles my_orthomcl_dir/orthomcl.config
+echo "Done!"
 
 #(12) run the mcl program on the mcl_input.txt file created in Step 11
 echo "================= Step 12: mcl =================="
@@ -128,3 +131,5 @@ mcl mclInput --abc -I 1.5 -o my_orthomcl_dir/mclOutput
 #(13) run orthomclMclToGroups to convert mcl output to groups.txt
 echo "========= Step 13: orthomclMclToGroups =========="
 orthomclSoftware-v2.0.9/bin/orthomclMclToGroups "$clusteracro" 1 < my_orthomcl_dir/mclOutput > groups.txt
+echo "Done!"
+echo "Results in groups.txt, and /pairs directory"
