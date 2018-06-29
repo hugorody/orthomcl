@@ -6,9 +6,7 @@ orthodir=`echo "$workingdir/orthomclSoftware-v2.0.9/bin"`
 mysqlpass="user123" #root password
 dependenciesinstall="no"
 installorthomcl="no"
-fastainput="/path/to/fasta/file.fas"
-taxon="MyTaxon"
-intlog="1" #id_field for STEP 5
+fastainput="/path/to/fasta/dir/"
 clusteracro="CLU" #acronym for the groups
 blastAVAfile="" #blast all-vs-all file - if not provided will run STEP 7
 
@@ -86,10 +84,16 @@ echo "========== Step 4: orthomclInstallSchema ========"
 
 #(5) run orthomclAdjustFasta (or your own simple script) to generate protein fasta files in the required format
 echo "=========== Step 5: orthomclAdjustFasta ========="
-"$orthodir"/orthomclAdjustFasta "$taxon" "$fastainput" "$intlog"
-
+COUNTER=0
+for i in "$fastainput"/*
+do
+  echo "$i"
+  ((COUNTER++))
+  "$orthodir"/orthomclAdjustFasta Group"$COUNTER" "$i" 1
+  cp Group"$COUNTER".fasta "$orthodir"/../my_orthomcl_dir/compliantFasta/
+done
 #Copy Sugar.fas from orthomclAdjustFasta directory to /my_orthomcl_dir/compliantFasta/
-cp "$taxon".fasta "$orthodir"/../my_orthomcl_dir/compliantFasta/
+
 
 #(6) run orthomclFilterFasta to filter away poor quality proteins, and optionally remove alternative proteins.
 echo "========== Step 6: orthomclFilterFasta =========="
@@ -98,8 +102,8 @@ echo "========== Step 6: orthomclFilterFasta =========="
 #(7) run all-v-all NCBI BLAST on goodProteins.fasta (output format is tab delimited text)
 echo "============ Step 7: All-v-all BLAST ============"
 if [ "$blastAVAfile" = "" ]; then
-  makeblastdb -in "$orthodir"/../my_orthomcl_dir/compliantFasta/"$taxon".fasta -dbtype prot -out "$orthodir"/../my_orthomcl_dir/compliantFasta/"$taxon".fasta.blastdb
-  blastp -query "$orthodir"/../my_orthomcl_dir/compliantFasta/"$taxon".fasta -db "$orthodir"/../my_orthomcl_dir/compliantFasta/"$taxon".fasta.blastdb -evalue 1e-5 -outfmt 6 -out "$orthodir"/../my_orthomcl_dir/all-vs-all.blastp
+  makeblastdb -in "$orthodir"/../my_orthomcl_dir/goodProteins.fas -dbtype prot -out "$orthodir"/../my_orthomcl_dir/goodProteins.fas.blastdb
+  blastp -query "$orthodir"/../my_orthomcl_dir/goodProteins.fas -db "$orthodir"/../my_orthomcl_dir/goodProteins.fas.blastdb -evalue 1e-5 -outfmt 6 -out "$orthodir"/../my_orthomcl_dir/all-vs-all.blastp
 else
   rm "$orthodir"/../my_orthomcl_dir/all-vs-all.blastp
   cp "$blastAVAfile" "$orthodir"/../my_orthomcl_dir/all-vs-all.blastp
