@@ -6,7 +6,7 @@ orthodir=`echo "$workingdir/orthomclSoftware-v2.0.9/bin"`
 mysqlpass="user123" # SET root password
 dependenciesinstall="no" # SET yes to install softwares and dependencies
 installorthomcl="no" # SET yes to install MCL software
-fastainput="/path/to/fasta/dir/" # SET your input directory with n FASTA files
+fastainput="/path/to/fasta/dir" # SET your input directory with n FASTA files
 clusteracro="CLU" #SET an acronym for the groups
 blastAVAfile="" #LEAVE empty if you don't have the BLASTp all-vs-all file (will run STEP 7)
 
