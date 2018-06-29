@@ -1,5 +1,6 @@
 #OrthoMCL installation
 
+#configure variables
 workingdir="/home/hugo/Documents/orthomcltest"
 orthodir=`echo "$workingdir/orthomclSoftware-v2.0.9/bin"`
 mysqlpass="user123"
