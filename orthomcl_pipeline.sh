@@ -1,7 +1,7 @@
 #!/usr/bin/sh
 
 #CONFIGURE VARIABLES
-workingdir="/path/to/orthomcltest" # SET working directory
+workingdir="/path/to/working/dir" # SET working directory
 orthodir=`echo "$workingdir/orthomclSoftware-v2.0.9/bin"`
 mysqlpass="user123" # SET root password
 dependenciesinstall="no" # SET yes to install softwares and dependencies
