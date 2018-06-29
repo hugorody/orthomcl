@@ -1,16 +1,16 @@
 #OrthoMCL installation
 
 #configure variables
-workingdir="/home/hugo/Documents/orthomcltest"
+workingdir="/path/to/orthomcltest" #set working directory
 orthodir=`echo "$workingdir/orthomclSoftware-v2.0.9/bin"`
-mysqlpass="user123"
+mysqlpass="user123" #root password
 dependenciesinstall="no"
 installorthomcl="no"
-fastainput="/home/hugo/Desktop/orthomcl/seqs_in_table.fas"
-taxon="Sugar"
-intlog="1"
-clusteracro="SUG"
-blastAVAfile="" #blast all-vs-all file - if not provided will run
+fastainput="/path/to/fasta/file.fas"
+taxon="MyTaxon"
+intlog="1" #id_field for STEP 5
+clusteracro="CLU" #acronym for the groups
+blastAVAfile="" #blast all-vs-all file - if not provided will run STEP 7
 
 #STEP (1)
 #install or get access to a supported relational database.  If using MySql, certain configurations are required, so it may involve working with your MySql administrator or installing your own MySql.  See the mysqlInstallationGuide.txt document provided with the orthomcl software.
