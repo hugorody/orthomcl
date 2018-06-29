@@ -1,8 +1,6 @@
-#!/usr/bin/sh
+#!/usr/bin/bash
 
 #CONFIGURE VARIABLES
-workingdir="/path/to/working/dir" # SET working directory
-orthodir=`echo "$workingdir/orthomclSoftware-v2.0.9/bin"`
 mysqlpass="user123" # SET root password
 dependenciesinstall="no" # SET yes to install softwares and dependencies
 installorthomcl="no" # SET yes to install MCL software
@@ -35,8 +33,7 @@ if [ "$dependenciesinstall" = "yes" ]; then
 	#STEP (2)
 	#download and install the mcl program according to provided instructions.
 
-	wget -P "$workingdir"/ https://www.micans.org/mcl/src/mcl-latest.tar.gz
-	cd "$workingdir"/
+	wget https://www.micans.org/mcl/src/mcl-latest.tar.gz
 	tar xzf mcl-latest.tar.gz
 	cd mcl-*
 	./configure
@@ -46,41 +43,40 @@ fi
 
 #(3) install and configure the OrthoMCL suite of programs
 if [ "$installorthomcl" = "yes" ]; then
-	wget -P "$workingdir"/ http://orthomcl.org/common/downloads/software/v2.0/orthomclSoftware-v2.0.9.tar.gz
-	cd "$workingdir"/
+	wget http://orthomcl.org/common/downloads/software/v2.0/orthomclSoftware-v2.0.9.tar.gz
 	tar xzf orthomclSoftware-v2.0.9.tar.gz
 fi
 
 #ORTHOMCL Pipeline
 #create my_orthomcl working directories
-mkdir "$orthodir"/../my_orthomcl_dir
-mkdir "$orthodir"/../my_orthomcl_dir/compliantFasta
-rm "$orthodir"/../my_orthomcl_dir/compliantFasta/*
+mkdir my_orthomcl_dir
+mkdir my_orthomcl_dir/compliantFasta
+rm my_orthomcl_dir/compliantFasta/*
 rm -r pairs/
-rm -r "$orthodir"/pairs/
+rm -r orthomclSoftware-v2.0.9/bin/pairs/
 
 #create MYSQL database
 mysql -u root -p"$mysqlpass" -e "DROP DATABASE IF EXISTS orthomcl";
 mysql -u root -p"$mysqlpass" -e "CREATE DATABASE IF NOT EXISTS orthomcl";
 
 #create config file
-rm "$orthodir"/../my_orthomcl_dir/orthomcl.config
-echo "dbVendor=mysql" | tee -a "$orthodir"/../my_orthomcl_dir/orthomcl.config
-echo "dbConnectString=dbi:mysql:orthomcl" | tee -a "$orthodir"/../my_orthomcl_dir/orthomcl.config
-echo "dbLogin=root" | tee -a "$orthodir"/../my_orthomcl_dir/orthomcl.config
-echo "dbPassword=$mysqlpass" | tee -a "$orthodir"/../my_orthomcl_dir/orthomcl.config
-echo "similarSequencesTable=SimilarSequences" | tee -a "$orthodir"/../my_orthomcl_dir/orthomcl.config
-echo "orthologTable=Ortholog" | tee -a "$orthodir"/../my_orthomcl_dir/orthomcl.config
-echo "inParalogTable=InParalog" | tee -a "$orthodir"/../my_orthomcl_dir/orthomcl.config
-echo "coOrthologTable=CoOrtholog" | tee -a "$orthodir"/../my_orthomcl_dir/orthomcl.config
-echo "interTaxonMatchView=InterTaxonMatch" | tee -a "$orthodir"/../my_orthomcl_dir/orthomcl.config
-echo "percentMatchCutoff=50" | tee -a "$orthodir"/../my_orthomcl_dir/orthomcl.config
-echo "evalueExponentCutoff=-5" | tee -a "$orthodir"/../my_orthomcl_dir/orthomcl.config
-echo "oracleIndexTblSpc=NONE" | tee -a "$orthodir"/../my_orthomcl_dir/orthomcl.config
+rm my_orthomcl_dir/orthomcl.config
+echo "dbVendor=mysql" | tee -a my_orthomcl_dir/orthomcl.config
+echo "dbConnectString=dbi:mysql:orthomcl" | tee -a my_orthomcl_dir/orthomcl.config
+echo "dbLogin=root" | tee -a my_orthomcl_dir/orthomcl.config
+echo "dbPassword=$mysqlpass" | tee -a my_orthomcl_dir/orthomcl.config
+echo "similarSequencesTable=SimilarSequences" | tee -a my_orthomcl_dir/orthomcl.config
+echo "orthologTable=Ortholog" | tee -a my_orthomcl_dir/orthomcl.config
+echo "inParalogTable=InParalog" | tee -a my_orthomcl_dir/orthomcl.config
+echo "coOrthologTable=CoOrtholog" | tee -a my_orthomcl_dir/orthomcl.config
+echo "interTaxonMatchView=InterTaxonMatch" | tee -a my_orthomcl_dir/orthomcl.config
+echo "percentMatchCutoff=50" | tee -a my_orthomcl_dir/orthomcl.config
+echo "evalueExponentCutoff=-5" | tee -a my_orthomcl_dir/orthomcl.config
+echo "oracleIndexTblSpc=NONE" | tee -a my_orthomcl_dir/orthomcl.config
 
 #(4) run orthomclInstallSchema to install the required schema into the database
 echo "========== Step 4: orthomclInstallSchema ========"
-"$orthodir"/orthomclInstallSchema "$orthodir"/../my_orthomcl_dir/orthomcl.config "$orthodir"/../my_orthomcl_dir/install_schema.log
+orthomclSoftware-v2.0.9/bin/orthomclInstallSchema my_orthomcl_dir/orthomcl.config my_orthomcl_dir/install_schema.log
 
 #(5) run orthomclAdjustFasta (or your own simple script) to generate protein fasta files in the required format
 echo "=========== Step 5: orthomclAdjustFasta ========="
@@ -89,46 +85,46 @@ for i in "$fastainput"/*
 do
   echo "$i"
   ((COUNTER++))
-  "$orthodir"/orthomclAdjustFasta Taxon"$COUNTER" "$i" 1
-  cp Group"$COUNTER".fasta "$orthodir"/../my_orthomcl_dir/compliantFasta/
+  orthomclSoftware-v2.0.9/bin/orthomclAdjustFasta Taxon"$COUNTER" "$i" 1
+  cp Taxon"$COUNTER".fasta my_orthomcl_dir/compliantFasta/
 done
 #Copy Sugar.fas from orthomclAdjustFasta directory to /my_orthomcl_dir/compliantFasta/
 
 #(6) run orthomclFilterFasta to filter away poor quality proteins, and optionally remove alternative proteins.
 echo "========== Step 6: orthomclFilterFasta =========="
-"$orthodir"/orthomclFilterFasta "$orthodir"/../my_orthomcl_dir/compliantFasta/ 10 20 "$orthodir"/../my_orthomcl_dir/goodProteins.fas "$orthodir"/../my_orthomcl_dir/badProteins.fas
+orthomclSoftware-v2.0.9/bin/orthomclFilterFasta my_orthomcl_dir/compliantFasta/ 10 20 my_orthomcl_dir/goodProteins.fas my_orthomcl_dir/badProteins.fas
 
 #(7) run all-v-all NCBI BLAST on goodProteins.fasta (output format is tab delimited text)
 echo "============ Step 7: All-v-all BLAST ============"
 if [ "$blastAVAfile" = "" ]; then
-  makeblastdb -in "$orthodir"/../my_orthomcl_dir/goodProteins.fas -dbtype prot -out "$orthodir"/../my_orthomcl_dir/goodProteins.fas.blastdb
-  blastp -query "$orthodir"/../my_orthomcl_dir/goodProteins.fas -db "$orthodir"/../my_orthomcl_dir/goodProteins.fas.blastdb -evalue 1e-5 -outfmt 6 -out "$orthodir"/../my_orthomcl_dir/all-vs-all.blastp
+  makeblastdb -in my_orthomcl_dir/goodProteins.fas -dbtype prot -out my_orthomcl_dir/goodProteins.fas.blastdb
+  blastp -query my_orthomcl_dir/goodProteins.fas -db my_orthomcl_dir/goodProteins.fas.blastdb -evalue 1e-5 -outfmt 6 -out my_orthomcl_dir/all-vs-all.blastp
 else
-  rm "$orthodir"/../my_orthomcl_dir/all-vs-all.blastp
-  cp "$blastAVAfile" "$orthodir"/../my_orthomcl_dir/all-vs-all.blastp
+  rm my_orthomcl_dir/all-vs-all.blastp
+  cp "$blastAVAfile" my_orthomcl_dir/all-vs-all.blastp
 fi
 
 #(8) run orthomclBlastParser on the NCBI BLAST tab output to create a file of similarities in the required format
 echo "========== Step 8: orthomclBlastParser =========="
-"$orthodir"/orthomclBlastParser "$orthodir"/../my_orthomcl_dir/all-vs-all.blastp "$orthodir"/../my_orthomcl_dir/compliantFasta/ > "$orthodir"/../my_orthomcl_dir/similarSequences.txt
+orthomclSoftware-v2.0.9/bin/orthomclBlastParser my_orthomcl_dir/all-vs-all.blastp my_orthomcl_dir/compliantFasta/ > my_orthomcl_dir/similarSequences.txt
 
 #(9) run orthomclLoadBlast to load the output of orthomclBlastParser into the database
 echo "=========== Step 9: orthomclLoadBlast  =========="
-"$orthodir"/orthomclLoadBlast "$orthodir"/../my_orthomcl_dir/orthomcl.config "$orthodir"/../my_orthomcl_dir/similarSequences.txt
+orthomclSoftware-v2.0.9/bin/orthomclLoadBlast my_orthomcl_dir/orthomcl.config my_orthomcl_dir/similarSequences.txt
 
 #(10) run the orthomclPairs program to compute pairwise relationships
 echo "============ Step 10: orthomclPairs ============="
-"$orthodir"/orthomclPairs "$orthodir"/../my_orthomcl_dir/orthomcl.config "$orthodir"/../my_orthomcl_dir/similarSequences.txt cleanup=no
+orthomclSoftware-v2.0.9/bin/orthomclPairs my_orthomcl_dir/orthomcl.config my_orthomcl_dir/similarSequences.txt cleanup=no
 
 #(11) run the orthomclDumpPairsFiles program to dump the pairs/ directory from the database
 echo "======== Step 11: orthomclDumpPairsFiles ========"
-#cp -r pairs/ "$orthodir"/
-"$orthodir"/orthomclDumpPairsFiles "$orthodir"/../my_orthomcl_dir/orthomcl.config
+#cp -r pairs/ orthomclSoftware-v2.0.9/bin/
+orthomclSoftware-v2.0.9/bin/orthomclDumpPairsFiles my_orthomcl_dir/orthomcl.config
 
 #(12) run the mcl program on the mcl_input.txt file created in Step 11
 echo "================= Step 12: mcl =================="
-mcl mclInput --abc -I 1.5 -o "$orthodir"/../my_orthomcl_dir/mclOutput
+mcl mclInput --abc -I 1.5 -o my_orthomcl_dir/mclOutput
 
 #(13) run orthomclMclToGroups to convert mcl output to groups.txt
 echo "========= Step 13: orthomclMclToGroups =========="
-"$orthodir"/orthomclMclToGroups "$clusteracro" 1 < "$orthodir"/../my_orthomcl_dir/mclOutput > groups.txt
+orthomclSoftware-v2.0.9/bin/orthomclMclToGroups "$clusteracro" 1 < my_orthomcl_dir/mclOutput > groups.txt
