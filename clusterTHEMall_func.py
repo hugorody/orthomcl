@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 
+# file1 = orthomcl file
+# file2 = fasta file
+# file3 = blast all vs all of species
+# out1 = name to write the output
 def getCLU(file1,file2,file3,out1,totalDICT,seqsDICT):
 
     with open(file1,"r") as set1:
@@ -18,7 +22,7 @@ def getCLU(file1,file2,file3,out1,totalDICT,seqsDICT):
         for i in set2:
             i = i.rstrip()
             if ">" in i:
-                gene = i.replace(">","")
+                gene = i.replace(">","").split(" ")[0]
                 if gene not in seqsDICT:
                     tmpsingles[gene] = ''
 
@@ -58,7 +62,6 @@ def getCLU(file1,file2,file3,out1,totalDICT,seqsDICT):
         for j in i[1]:
             if j not in seqsDICT:
                 seqsDICT[j] = "NCLU"+str(clucount)
-
         clucount += 1
 
     realsingles = {}
@@ -82,3 +85,37 @@ def getCLU(file1,file2,file3,out1,totalDICT,seqsDICT):
     print ("Total number of genes with OrthoMCL and New clusters",len(seqsDICT))
     print ("Total number of clusters:",len(totalDICT))
     print ("Max cluster size:",maxclusize)
+
+def besthit(inputfile,dictBestHit):
+    print ("Best Hit for",inputfile)
+    with open(inputfile,"r") as set1:
+        for i in set1:
+            i = i.rstrip()
+            i = i.split("\t")
+            if i[0] != i[1]:
+                if i[0] not in dictBestHit:
+                    dictBestHit[i[0]] = [i[1],i[2]]
+                else:
+                    if float(i[2]) > float(dictBestHit[i[0]][1]):
+                        dictBestHit[i[0]] = [i[1],i[2]]
+
+def finalcluster(totalCOMP,seq_cluster,total_cluster,comps_BH,cluster):
+    for i in totalCOMP.items():
+        for j in i[1].split(","):
+            if j in comps_BH:
+                if i[0] not in cluster:
+                    vals = comps_BH[j]
+                    vals.append(seq_cluster[comps_BH[j][0]])
+                    vals.append(j)
+                    vals.append(str(len(total_cluster[vals[2]].split(","))))
+                    cluster[i[0]] = vals
+                    #print (i[0],vals)
+                else:
+                    if float(cluster[i[0]][1]) > float(comps_BH[j][1]):
+                        vals = comps_BH[j]
+                        vals.append(seq_cluster[comps_BH[j][0]])
+                        vals.append(j)
+                        vals.append(str(len(total_cluster[vals[2]].split(","))))
+                        cluster[i[0]] = vals
+            else:
+                cluster[i[0]] = ["NaN","0","NaN","NaN","NaN"]
