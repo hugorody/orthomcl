@@ -56,8 +56,8 @@ rm -r pairs/
 rm -r orthomclSoftware-v2.0.9/bin/pairs/
 
 #create MYSQL database
-mysql -u root -p"$mysqlpass" -e "DROP DATABASE IF EXISTS orthomcl";
-mysql -u root -p"$mysqlpass" -e "CREATE DATABASE IF NOT EXISTS orthomcl";
+mysql -u root -p "$mysqlpass" -e "DROP DATABASE IF EXISTS orthomcl";
+mysql -u root -p "$mysqlpass" -e "CREATE DATABASE IF NOT EXISTS orthomcl";
 
 #create config file
 rm my_orthomcl_dir/orthomcl.config
