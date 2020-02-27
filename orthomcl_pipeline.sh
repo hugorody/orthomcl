@@ -17,6 +17,7 @@ if [ "$dependenciesinstall" = "yes" ]; then
 	sudo apt-get install libxi-dev libxmu-dev freeglut3-dev libgsl0-dev libnetpbm10-dev libplplot-dev pgplot5 build-essential gfortran
 	cpanm BioPerl DBI Parallel::ForkManager YAML::Tiny Set::Scalar Text::Table Exception::Class Test::Most Test::Warn Test::Exception Test::Deep Moose SVG Algorithm::Combinatorics
 	sudo apt-get install mysql-server
+	sudo apt install mcl
 
 	export DBD_MYSQL_LIBS="-L/usr/local/mysql/lib/mysql -lmysqlclient"
 	export DBD_MYSQL_CONFIG=/etc/mysql/conf.d/mysql.cnf
