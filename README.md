@@ -11,3 +11,11 @@ Fix the error:
 * Enter MySQL: mysql -u root -p
 * SET GLOBAL innodb_buffer_pool_size=402653184;
 * Quit MySQL.
+
+
+ERROR 1698 (28000): Access denied for user 'root'@'localhost'
+mysql> USE mysql;
+mysql> UPDATE user SET plugin='mysql_native_password' WHERE User='root';
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
+mysql> FLUSH PRIVILEGES;
+mysql> exit;
