@@ -14,8 +14,13 @@ Fix the error:
 
 
 ERROR 1698 (28000): Access denied for user 'root'@'localhost'
+
 mysql> USE mysql;
+
 mysql> UPDATE user SET plugin='mysql_native_password' WHERE User='root';
+
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
+
 mysql> FLUSH PRIVILEGES;
+
 mysql> exit;
