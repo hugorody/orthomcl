@@ -13,14 +13,10 @@ Fix the error:
 * Quit MySQL.
 
 
-ERROR 1698 (28000): Access denied for user 'root'@'localhost'
+## ERROR 1698 (28000): Access denied for user 'root'@'localhost'
 
-mysql> USE mysql;
-
-mysql> UPDATE user SET plugin='mysql_native_password' WHERE User='root';
-
-mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
-
-mysql> FLUSH PRIVILEGES;
-
+mysql> USE mysql;\n
+mysql> UPDATE user SET plugin='mysql_native_password' WHERE User='root';\n
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';\n
+mysql> FLUSH PRIVILEGES;\n
 mysql> exit;
