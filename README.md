@@ -18,3 +18,8 @@ mysql> UPDATE user SET plugin='mysql_native_password' WHERE User='root';\
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';\
 mysql> FLUSH PRIVILEGES;\
 mysql> exit;
+
+
+## The default root password is blank (i.e. empty string) 
+
+$ mysqladmin -u root password [newpassword]
