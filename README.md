@@ -13,7 +13,7 @@ mysql> SET GLOBAL innodb_buffer_pool_size=402653184;\
 
 ## ERROR 1698 (28000): Access denied for user 'root'@'localhost'
 
-mysql> sudo mysql -u root\
+$ sudo mysql -u root\
 mysql> USE mysql;\
 mysql> SELECT User, Host, plugin FROM mysql.user;\
 mysql> UPDATE user SET plugin='mysql_native_password' WHERE User='root';\
@@ -21,7 +21,7 @@ mysql> FLUSH PRIVILEGES;\
 mysql> exit;\
 mysql> sudo service mysql restart\
 
-mysql> sudo mysql -u root\
+$ sudo mysql -u root\
 mysql> USE mysql;\
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';\
 mysql> FLUSH PRIVILEGES;\
